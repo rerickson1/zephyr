@@ -334,7 +334,12 @@ static void l4_event_handler(struct net_mgmt_event_callback *cb,
 			     struct net_if *iface)
 {
 	switch (event) {
+#if defined(CONFIG_MODEM_HL7800)
+	case NET_EVENT_DNS_SERVER_ADD:
+#else
+
 	case NET_EVENT_L4_CONNECTED:
+#endif
 		LOG_INF("IP Up");
 		on_net_event_l4_connected();
 		break;
@@ -386,6 +391,7 @@ int main(void)
 
 		(void)conn_mgr_if_connect(net_if_get_default());
 
+		LOG_INF("Waiting for network connection...");
 		k_sem_take(&network_connected_sem, K_FOREVER);
 	}
 
