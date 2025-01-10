@@ -19,7 +19,11 @@ static void l4_event_handler(struct net_mgmt_event_callback *cb, uint32_t event,
 			     struct net_if *iface)
 {
 	switch (event) {
+#if defined(CONFIG_MODEM_HL7800) && !defined(CONFIG_DNS_SERVER_IP_ADDRESSES)
+	case NET_EVENT_DNS_SERVER_ADD:
+#else
 	case NET_EVENT_L4_CONNECTED:
+#endif
 		LOG_INF("Network connectivity established and IP address assigned");
 		k_sem_give(&network_connected);
 		break;
